@@ -1,0 +1,454 @@
+/* ======================
+   IMPORTS
+   ====================== */
+/* Add cache-busting query parameter to the CSS file reference */
+@import url('./dashboard.css?v=1.0.4');
+
+/* ======================
+   ROOT VARIABLES
+   ====================== */
+/* Define theme colors for SFW (Safe for Work) and NSFW (Not Safe for Work) content */
+:root {
+  --sfw-color: #3c9ada; /* Blue for SFW */
+  --nsfw-color: #eb3636; /* Red for NSFW */
+}
+
+/* ======================
+   BASE LAYOUT
+   ====================== */
+/* Apply base styles to the HTML and body elements */
+html,
+body {
+  margin: 0; /* Remove default margin */
+  padding: 0; /* Remove default padding */
+  font-family: "Roboto", sans-serif; /* Set font family */
+  background-color: #2f2f2f; /* Set dark background color */
+  display: flex; /* Use flexbox for layout */
+  justify-content: center; /* Center content horizontally */
+  align-items: flex-start; /* Align content at the top */
+  flex-flow: row wrap; /* Enable wrapping for responsive design */
+}
+
+/* Style for horizontal rules */
+hr {
+  width: 100%; /* Full width */
+  border: 0; /* Remove default border */
+  border-top: 1px solid #5f5f5f; /* Add a custom top border */
+  margin: 10px 0; /* Add vertical spacing */
+}
+
+/* ======================
+   PANEL COMPONENT
+   ====================== */
+/* Style for panel containers */
+.panel {
+  background-color: #000; /* Set black background */
+  border-radius: 5px; /* Add rounded corners */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.9); /* Add shadow for depth */
+  margin: 20px; /* Add outer spacing */
+  padding: 20px; /* Add inner spacing */
+  min-width: 250px; /* Set minimum width */
+  max-width: 250px; /* Set maximum width */
+}
+
+/* Use the panel's ID as a title via pseudo-element */
+.panel::before {
+  content: attr(id); /* Dynamically set content using the panel's ID */
+  display: table; /* Ensure proper layout */
+  clear: both; /* Clear floats */
+  width: 100%; /* Full width */
+  font-size: 20px; /* Set font size */
+  font-weight: 300; /* Use light font weight */
+  color: #5f5f5f; /* Set gray text color */
+}
+
+/* ======================
+   COLLAPSIBLE SECTIONS
+   ====================== */
+/* Style for collapsible containers inside panels */
+.panel .container {
+  border: 1px solid black; /* Add black border */
+  border-left: none; /* Remove left border */
+  border-right: none; /* Remove right border */
+  border-collapse: collapse; /* Collapse borders */
+}
+
+/* Hide checkboxes used for toggle functionality */
+.panel input {
+  display: none; /* Hide input elements */
+}
+
+/* Hide content by default */
+.panel input ~ .stat-container {
+  display: none; /* Hide sibling content */
+}
+
+/* Show content when checkbox is checked */
+.panel input:checked ~ .stat-container {
+  display: block; /* Make sibling content visible */
+}
+
+/* Style for toggle indicators */
+.panel input + .stat {
+  cursor: pointer; /* Change cursor to pointer */
+  position: relative; /* Position for pseudo-element */
+}
+
+/* Add a right arrow as the default toggle indicator */
+.panel input + .stat::after {
+  content: "►"; /* Right arrow */
+  position: absolute; /* Position relative to parent */
+  right: 10px; /* Offset from the right */
+}
+
+/* Change to a down arrow when checked */
+.panel input:checked + .stat::after {
+  content: "▼"; /* Down arrow */
+}
+
+/* ======================
+   DATA DISPLAY COMPONENTS
+   ====================== */
+/* Style for stat headers */
+.stat {
+  display: inline-block; /* Use inline-block layout */
+  width: 100%; /* Full width */
+  margin: 0 -10px; /* Add negative margin for alignment */
+  background-color: #2f2f2f; /* Set dark background */
+  padding: 10px; /* Add inner spacing */
+  color: #f2f2f2; /* Set light text color */
+}
+
+/* Style for value containers */
+.values {
+  padding: 10px; /* Add inner spacing */
+  border: 1px dotted #fff; /* Add dotted border */
+  width: calc(100% - 20px); /* Adjust width to account for padding */
+  margin: 0 -10px 10px; /* Add negative margin for alignment */
+  border-radius: 5px; /* Add rounded corners */
+}
+
+/* SFW and NSFW-specific text colors */
+.values .sfw {
+  color: var(--sfw-color); /* SFW text color */
+}
+.values .nsfw {
+  color: var(--nsfw-color); /* NSFW text color */
+}
+
+/* ======================
+   PIE CHARTS
+   ====================== */
+/* Style for pie chart components */
+.pie-chart {
+  width: 200px; /* Set fixed width */
+  height: 200px; /* Set fixed height */
+  border-radius: 50%; /* Make circular */
+  margin: 20px; /* Add outer spacing */
+  transition: transform 0.3s ease; /* Add smooth hover effect */
+  background: conic-gradient(
+    var(--sfw-color) 0% var(--ratio-var), /* SFW segment */
+    var(--nsfw-color) var(--ratio-var) 100% /* NSFW segment */
+  );
+}
+
+/* Scale up the pie chart on hover */
+.pie-chart:hover {
+  transform: scale(1.05); /* Slightly enlarge */
+}
+
+/* ======================
+   TABLE
+   ====================== */
+/* Style for the table container */
+.table-container {
+  margin: 20px; /* Add outer spacing */
+  background-color: #000000;
+  border-radius: 5px; /* Add rounded corners */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.9); /* Add shadow for depth */
+}
+
+/* ======================
+   SEARCH RESULTS
+   ====================== */
+/* Style for the search results container when it contains results */
+.search-results {
+  background-color: transparent; /* Black background for filled search results */
+  border-radius: 5px; /* Rounded corners */
+  color: #5f5f5f; /* Gray text color */
+  padding: 20px 0 0 20px; /* Inner spacing */
+}
+
+/* ======================
+   TABLE STYLING
+   ====================== */
+/* Style for table cells in the first column */
+table td:first-child,
+table th:first-child {
+  position: sticky; /* Sticky positioning for the first column */
+  left: 0; /* Stick to the left */
+  z-index: 1; /* Ensure it appears above other elements */
+  border-right: 2px solid #000; /* Right border for separation */
+  border-left: 20px solid #000000; /* Left border for alignment */
+}
+
+/* Style for table cells in the last row of the header */
+table thead tr:last-child td input,
+table thead tr:last-child td select {
+  padding: 10px; /* Inner spacing for input fields */
+  background-color: transparent; /* Transparent background */
+  border-style: unset; /* Remove border style */
+  color: #f2f2f2; /* Light text color */
+  width: 80%; /* Set width to 80% */
+  line-height: 30px; /* Line height for better readability */
+  font-size: 14px; /* Font size for input text */
+}
+
+table thead tr:last-child td:nth-child(2){
+  padding: 0;
+}
+
+table thead tr:last-child td select{
+  width: 100%;
+  height: 100%;
+  border-radius: unset;
+}
+
+table thead tr:last-child td select:focus-visible{
+  outline: none;
+  border-bottom: 1px solid #f2f2f2; /* Add bottom border */
+}
+
+table thead tr:last-child td select option {
+  background-color: #000000;
+  color: #f2f2f2;
+  border-radius: unset;
+  border-color: #f2f2f2;
+}
+
+/* Hide rows marked as hidden */
+table tbody tr[hidden] {
+  display: none; /* Completely hide the row */
+}
+
+/* Style for table body cells */
+table tbody tr td {
+  color: #f2f2f2; /* Light text color */
+  padding: 10px; /* Inner spacing */
+  text-align: right; /* Align text to the right */
+}
+
+/* Style for the first cell in each row */
+table tbody tr td:first-child {
+  text-align: left; /* Align text to the left */
+}
+
+/* Style for tables */
+table {
+  background-color: transparent; /* Set black background */
+  color: #5f5f5f; /* Set gray text color */
+  padding: 0 10px 20px 0; /* Add inner spacing */
+  border-collapse: separate; /* Don't collapse */
+  border-spacing: 0; /* Set border spacing to zero */
+  margin: 2px;
+}
+
+table thead {
+  position: sticky; /* Make header sticky */
+  top: 0; /* Stick to the top */
+  z-index: 2; /* Ensure header is on top */
+}
+
+table td:first-child,
+table th:first-child {
+  position: sticky; /* Make first column sticky */
+  left: 0; /* Stick to the left */
+  z-index: 1; /* Ensure first column is sticky */
+  border-right: 2px solid #000; /* Add right border */
+  border-left: 20px solid #000000; /* Add left border */
+}
+
+table td:not(:first-child),
+table th:not(:first-child) {
+  max-width: 100px;
+}
+
+table th:not(:first-child) {
+  overflow: hidden; /* Hide overflow */
+  white-space: nowrap; /* Prevent line breaks */
+  text-overflow: ellipsis; /* Show ellipsis for overflowed text */
+}
+
+table td:not(:last-child),
+table th:not(:last-child) {
+  border-right: 2px solid #000; /* Add right border */
+}
+
+table td:last-child,
+table th:last-child{
+  border-right-color: black;
+  border-right-width: 1px;
+  border-right-style: solid;
+}
+
+/* Style for the first row in the table header */
+table thead tr:first-child th {
+  background-color: #2f2f2f; /* Set dark background */
+  color: #f2f2f2; /* Set light text color */
+  padding: 10px; /* Add inner spacing */
+  cursor: pointer; /* Change cursor to pointer */
+  border-top: 20px solid #000000; /* Add top border */
+}
+
+/* Add position attribute to table header cells */
+table thead tr:first-child th[data-position]::before {
+  content: attr(data-position); /* Display position */
+  float: inline-start; /* Align to start */
+  font-weight: unset;
+  color: #3c9ada; /* Set blue text color */
+}
+
+/* Add order attribute to table header cells */
+table thead tr:first-child th.asc::after {
+  content: "↑"; /* Display order */
+  float: inline-end; /* Align to end */
+}
+
+/* Add order attribute to table header cells */
+table thead tr:first-child th.desc::after {
+  content: "↓"; /* Display order */
+  float: inline-end; /* Align to end */
+}
+
+/* Style for cells in the last row of the table header */
+table thead tr:last-child td {
+  padding: 10px; /* Add inner spacing */
+  background-color: #000000; /* Set black background */
+}
+
+/* Style for input fields in the last row of the table header */
+table thead tr:last-child td input {
+  padding: 10px; /* Add inner spacing */
+  background-color: transparent; /* Set transparent background */
+  border-style: unset; /* Remove border style */
+  color: #f2f2f2; /* Set light text color */
+  width: 80%; /* Set width to 80% */
+  line-height: 30px; /* Set line height */
+  font-size: 14px; /* Set font size */
+}
+
+/* Style for focused input fields */
+table thead tr:last-child td input:focus-visible {
+  outline: unset; /* Remove outline */
+  border-bottom: 1px solid #f2f2f2; /* Add bottom border */
+}
+
+/* Hide rows marked as hidden */
+table tbody tr[hidden] {
+  display: none; /* Do not display */
+}
+
+/* Style for table body cells */
+table tbody tr td {
+  color: #f2f2f2; /* Set light text color */
+  padding: 10px; /* Add inner spacing */
+  text-align: right; /* Align text to the right */
+}
+
+/* Style for the first cell in each row */
+table tbody tr td:first-child {
+  text-align: left; /* Align text to the left */
+}
+
+/* Style for odd rows */
+table tbody tr.odd td {
+  background-color: #2f2f2f; /* Set dark background */
+}
+
+/* Style for even rows */
+table tbody tr.even td {
+  background-color: #3f3f3f; /* Set slightly lighter background */
+}
+
+table tbody tr td.sfw {
+  color: var(--sfw-color); /* Set SFW background color */
+}
+
+table tbody tr td.nsfw {
+  color: var(--nsfw-color); /* Set NSFW background color */
+}
+
+/* Spinner styling */
+.spinner{
+  display: none;
+  padding: 50px;
+  text-align: center;
+  z-index: 5;
+  position: absolute;
+  top: 50%;
+  left: calc(50% - 45px);
+}
+
+/* Spinner loading state */
+.spinner.loading {
+  display: block;
+}
+
+/* Spinner loading animation */
+.spinner.loading:before {
+  content: "";
+  height: 90px;
+  width: 90px;
+  margin: -15px auto auto -15px;
+  position: absolute;
+  top: calc(50% - 45px);
+  left: calc(50% - 45px);
+  border-width: 8px;
+  border-style: solid;
+  border-color: #5f5f5f #000000 #000000;
+  border-radius: 100%;
+  animation: rotation 0.7s infinite linear;
+}
+
+
+/* ======================
+   RESPONSIVE DESIGN
+   ====================== */
+/* Adjust panel height for larger screens */
+@media (min-width: 650px) {
+  table td:nth-child(5),
+  table th:nth-child(5),
+  table td:nth-child(7),
+  table th:nth-child(7) {
+    max-width: unset; /* Set maximum width for third column */
+  }
+}
+
+/* Adjust panel height for smaller screens */
+@media (max-width: 650px) {
+  /* Style for table containers */
+  .table-container {
+    overflow-x: auto; /* Enable horizontal scrolling */
+    overflow-y: auto; /* Enable vertical scrolling */
+    max-width: 100vw; /* Limit width to viewport */
+    max-height: 100vh; /* Limit height to viewport */
+  }
+
+  table td:first-child,
+  table th:first-child {
+    max-width: 100px; /* Set maximum width for first column */
+    overflow: hidden; /* Hide overflow */
+    white-space: nowrap; /* Prevent line breaks */
+    text-overflow: ellipsis; /* Show ellipsis for overflowed text */
+  }
+}
+
+
+/* ======================
+   ANIMATIONS
+   ====================== */
+/* Rotation animation */
+@keyframes rotation {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(359deg); }
+}
