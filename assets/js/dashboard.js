@@ -38,7 +38,7 @@ function getStats() {
   document.querySelector(".spinner").classList.toggle("loading");
 
   // Fetch statistics data from the API
-  fetch("http://naslku.synology.me/_CommissionExplorerAPI/api/stats.php")
+  fetch("https://naslku.synology.me/_CommissionExplorerAPI/api/stats.php")
     .then((res) => res.json()) // Parse the response as JSON
     .then((stats) => {
       if (stats.error) {
