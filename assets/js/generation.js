@@ -180,7 +180,7 @@ function generateMain(root) {
 function generateCard(artistName, thumb) {
   // Image element setup
   const img = document.createElement("img");
-  img.src = thumb.replace("..", host);
+  img.src = thumb.replace("../", host);
   img.alt = `picture by ${artistName}`;
 
   // Special handling for placeholder image
@@ -234,7 +234,7 @@ function generatePreview(link) {
   // Configure image based on type
   switch (true) {
     case pictureTypes.includes(extension):
-      img.src = link.replace("../commissions/", host + "/thumbs/");
+      img.src = link.replace("../commissions/", host + "thumbs/");
       break;
     case videoTypes.includes(extension):
       img.src = "./assets/img/film.png";
@@ -261,12 +261,12 @@ function generatePreview(link) {
     default:
       img.src = link;
   }
-  img.alt = `Preview for ${link}`;
+  img.alt = `Preview for ${link.replace("../", host)}`;
 
   // Create and append elements
   const container = document.createElement("a");
   container.className = "img-div";
-  container.href = link;
+  container.href = link.replace("../", host);
   container.target = "_blank";
   container.append(img);
   if (addon !== undefined) {
