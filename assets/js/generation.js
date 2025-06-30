@@ -244,14 +244,14 @@ function generatePreview(link) {
       addon.preload = "metadata";
       const source = document.createElement("source");
       source.type = "video/" + extension;
-      source.src = link;
+      source.src = link.replace("../", host);
       addon.appendChild(source);
       break;
     case audioTypes.includes(extension):
       img.src = "./assets/img/music.png";
       addon = document.createElement("audio");
       addon.setAttribute("controls", null);
-      addon.src = link;
+      addon.src = link.replace("../", host);
       addon.preload = "metadata";
       break;
     case textTypes.includes(extension):
@@ -259,7 +259,7 @@ function generatePreview(link) {
       img.style.width = "200px";
       break;
     default:
-      img.src = link;
+      img.src = link.replace("../", host);
   }
   img.alt = `Preview for ${link.replace("../", host)}`;
 
