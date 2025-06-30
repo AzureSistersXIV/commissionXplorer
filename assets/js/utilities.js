@@ -516,7 +516,7 @@ function changeFilter(event) {
     const searchParams = new URLSearchParams(window.location.search); // Get current URL parameters
     searchParams.set("isNsfw", newNsfwState); // Update the NSFW parameter
 
-    const newUrl = `/commissionXplorer/${page}?${searchParams.toString()}`; // Construct the new URL
+    const newUrl = `/${API}/${page}?${searchParams.toString()}`; // Construct the new URL
     history.pushState(state, title, newUrl); // Push the new state to history
     document.querySelector("#search").value = ""; // Clear the search field
   }
@@ -538,7 +538,7 @@ function goToArtist(event) {
   const searchParams = new URLSearchParams(window.location.search); // Get current URL parameters
   searchParams.set("artist", event.currentTarget.id); // Update the artist parameter
 
-  const newUrl = `/commissionXplorer/${page}?${searchParams.toString()}`; // Construct the new URL
+  const newUrl = `/${API}/${page}?${searchParams.toString()}`; // Construct the new URL
   history.pushState(state, title, newUrl); // Push the new state to history
   window.document.title = title;
   setPageTitle(); // Update the page title
@@ -561,7 +561,7 @@ function returnIndex() {
   const searchParams = new URLSearchParams(window.location.search); // Get current URL parameters
   searchParams.delete("artist"); // Remove the artist parameter
 
-  const newUrl = `/commissionXplorer/${page}?${searchParams.toString()}`; // Construct the new URL
+  const newUrl = `/${API}/${page}?${searchParams.toString()}`; // Construct the new URL
   history.pushState(state, title, newUrl); // Push the new state to history
   window.document.title = title;
   setPageTitle(); // Update the page title

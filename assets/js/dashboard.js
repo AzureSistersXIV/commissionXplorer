@@ -1,4 +1,5 @@
 // Global variable to store the total number of commissions.
+let API = "commissionXplorerAPI/";
 let totalCommissions = 0;
 let totalParts = [];
 let sortStates = {
@@ -38,7 +39,7 @@ function getStats() {
   document.querySelector(".spinner").classList.toggle("loading");
 
   // Fetch statistics data from the API
-  fetch("https://naslku.synology.me/_CommissionExplorerAPI/api/stats.php")
+  fetch(`https://naslku.synology.me/${API}/api/stats.php`)
     .then((res) => res.json()) // Parse the response as JSON
     .then((stats) => {
       if (stats.error) {

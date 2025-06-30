@@ -1,5 +1,6 @@
 // Base URL for API endpoints
-let host = "https://naslku.synology.me/_CommissionExplorerAPI/";
+let API = "commissionXplorerAPI/";
+let host = `https://naslku.synology.me/${API}`;
 let page = "";
 // Global flag for NSFW content filtering
 var isNsfw;
