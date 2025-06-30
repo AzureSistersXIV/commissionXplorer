@@ -27,8 +27,8 @@ function generateHeader(root) {
 
   // Main title with accessibility features
   const h1 = document.createElement("h1");
-  h1.id = "ComExTitle";
-  h1.innerText = "ComEx";
+  h1.id = "CommissionXplorer";
+  h1.innerText = "Commission Xplorer";
   // ARIA attributes for heading
   h1.setAttribute("aria-level", "1");
   h1.setAttribute("role", "heading");
