@@ -38,7 +38,7 @@ function setPageTitle() {
   document.title = artist ? `${ucFirst(artist)} | ComEx` : "Welcome | ComEx";
   document.querySelector("meta[name='description']").content = artist 
     ? `Commissions by ${artist}` 
-    : `Explore and manage commissions effortlessly with ComEx.`;
+    : `Explore and manage commissions effortlessly with Commission Xplorer.`;
 }
 
 /**
