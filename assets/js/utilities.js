@@ -27,15 +27,15 @@ function ucFirst(string) {
  * Dynamically sets document title based on URL parameters.
  * @function setPageTitle
  * @description Uses "artist" query parameter if present (capitalized via ucFirst()),
- * defaults to "Welcome | ComEx" when no artist parameter exists.
+ * defaults to "Welcome | Commission Xplorer" when no artist parameter exists.
  * @example
  * // URL: https://example.com/?artist=picasso
- * // Sets title to "Picasso | ComEx"
+ * // Sets title to "Picasso | Commission Xplorer"
  */
 function setPageTitle() {
   const searchParams = new URLSearchParams(window.location.search);
   const artist = searchParams.get("artist");
-  document.title = artist ? `${ucFirst(artist)} | ComEx` : "Welcome | ComEx";
+  document.title = artist ? `${ucFirst(artist)} | Commission Xplorer` : "Welcome | Commission Xplorer";
   document.querySelector("meta[name='description']").content = artist 
     ? `Commissions by ${artist}` 
     : `Explore and manage commissions effortlessly with Commission Xplorer.`;
@@ -46,11 +46,11 @@ function setPageTitle() {
  * @function isWelcomePage
  * @returns {boolean} True if document title matches welcome page title
  * @example
- * // When title is "Welcome | ComEx"
+ * // When title is "Welcome | Commission Xplorer"
  * isWelcomePage();  // Returns true
  */
 function isWelcomePage() {
-  return document.title === "Welcome | ComEx";
+  return document.title === "Welcome | Commission Xplorer";
 }
 
 /**
@@ -512,7 +512,7 @@ function changeFilter(event) {
   const newNsfwState = event.currentTarget.innerText === "NSFW"; // Determine new NSFW state based on button text
   if (isNsfw !== newNsfwState) { // Only proceed if the state has changed
     const state = { data: "optional state object" }; // Create a state object for history
-    const title = `Welcome | ComEx`; // Set the new title
+    const title = `Welcome | Commission Xplorer`; // Set the new title
     const searchParams = new URLSearchParams(window.location.search); // Get current URL parameters
     searchParams.set("isNsfw", newNsfwState); // Update the NSFW parameter
 
@@ -534,7 +534,7 @@ function changeFilter(event) {
  */
 function goToArtist(event) {
   const state = { data: "optional state object" }; // Create a state object for history
-  const title = `${event.currentTarget.id} | ComEx`; // Set the new title based on the artist's ID
+  const title = `${event.currentTarget.id} | Commission Xplorer`; // Set the new title based on the artist's ID
   const searchParams = new URLSearchParams(window.location.search); // Get current URL parameters
   searchParams.set("artist", event.currentTarget.id); // Update the artist parameter
 
@@ -557,7 +557,7 @@ function goToArtist(event) {
 function returnIndex() {
   const artist = document.title.split("|")[0].trim(); // Extract the artist name from the title
   const state = { data: "optional state object" }; // Create a state object for history
-  const title = "Welcome | ComEx"; // Set the new title
+  const title = "Welcome | Commission Xplorer"; // Set the new title
   const searchParams = new URLSearchParams(window.location.search); // Get current URL parameters
   searchParams.delete("artist"); // Remove the artist parameter
 

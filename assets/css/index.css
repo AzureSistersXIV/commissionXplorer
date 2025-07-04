@@ -7,11 +7,11 @@
 
 /* Theme color definitions */
 :root {
-  --ce-primary-background-color: #0e0e0e;    /* Main background/darkest shade */
-  --ce-primary-font-color: #e0e0e0;          /* Primary text color */
-  --ce-secondary-background-color: #2d2d2d;  /* Secondary elements/header */
+  --ce-primary-background-color: #000025;    /* Main background/darkest shade */
+  --ce-primary-font-color: #5fb3ce;          /* Primary text color */
+  --ce-secondary-background-color: #000099;  /* Secondary elements/header */
   --ce-secondary-font-color: #d2d2d2;        /* Secondary text */
-  --ce-third-background-color: #4c4c4c;      /* Card backgrounds */
+  --ce-third-background-color: #1c4a91;      /* Card backgrounds */
   --ce-third-font-color: #c4c4c4;            /* Tertiary text */
 }
 
@@ -81,7 +81,7 @@ header button {
 
 /* Header button hover effect */
 header button:hover {
-  background-color: #1f1f1f;
+  background-color: var(--ce-primary-background-color);
 }
 
 /*** Navigation Components ****************************************************/
@@ -109,7 +109,7 @@ nav > span, nav > div.content-filters > span {
 
 /* Navigation span and content filters hover effect */
 nav > span:hover, nav > div.content-filters > span:hover {
-  background-color: #1f1f1f;
+  background-color: var(--ce-primary-background-color);
 }
 
 /* Checked radio button styling */
@@ -177,7 +177,7 @@ nav > div.search-bar:last-child ul li {
 
 /* Search bar dropdown list item hover and selected effect */
 nav > div:last-child ul li:hover, nav > div:last-child ul li.selected {
-  background-color: #1f1f1f;
+  background-color: var(--ce-primary-background-color);
 }
 
 /*** Main Gallery Layout ******************************************************/
