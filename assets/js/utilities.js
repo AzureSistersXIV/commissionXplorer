@@ -488,6 +488,7 @@ function showUniqueSuggestion() {
     if (card.id.toLowerCase() === searchTerm) {
       card.classList.add("searched");
       setTimeout(() => card.scrollIntoView({ behavior: "smooth", block: "nearest" }), 10);
+      document.querySelector(".bumper").scrollIntoView({behaviour: "instant", block: "start"});
       emptySuggestions();
     } else {
       card.dataset.hidden = true;
