@@ -40,17 +40,6 @@ function generateHeader(root) {
   header.setAttribute("aria-labelledby", "Comex");
   header.setAttribute("aria-label", "Comex header");
 
-  // Build DOM structure
-  header.appendChild(h1);
-  header.appendChild(span);
-  root.appendChild(header);
-}
-
-/**
- * Generates the main content structure with enhanced accessibility features
- * @param {HTMLElement} root - The container element to append the main content to
- */
-function generateMain(root) {
   // NSFW/SFW Toggle Section
   // Radio button group for content filtering
   const sfwInput = createRadioInput("sfw", "false");
@@ -123,6 +112,23 @@ function generateMain(root) {
   nav.appendChild(contentFilters);
   nav.appendChild(searchbar);
 
+  const bumper = document.createElement("div");
+  bumper.classList = "bumper";
+  root.appendChild(bumper);
+
+  // Build DOM structure
+  header.appendChild(h1);
+  header.appendChild(span);
+  header.appendChild(nav);
+  root.appendChild(header);
+  root.appendChild(bumper);
+}
+
+/**
+ * Generates the main content structure with enhanced accessibility features
+ * @param {HTMLElement} root - The container element to append the main content to
+ */
+function generateMain(root) {
   // Image Gallery Container
   // Accessible landmark for content
   const gallery = document.createElement("div");
@@ -163,7 +169,6 @@ function generateMain(root) {
   // Main Content Assembly
   const main = document.createElement("main");
   main.setAttribute("role", "main");
-  main.appendChild(nav);
   main.appendChild(gallery);
   main.appendChild(spinnersContainer);
   main.appendChild(backdrop);

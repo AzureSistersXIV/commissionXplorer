@@ -7,22 +7,23 @@
 
 /* Theme color definitions */
 :root {
-  --ce-primary-background-color: #000025;    /* Main background/darkest shade */
-  --ce-primary-font-color: #5fb3ce;          /* Primary text color */
-  --ce-secondary-background-color: #000099;  /* Secondary elements/header */
-  --ce-secondary-font-color: #d2d2d2;        /* Secondary text */
-  --ce-third-background-color: #1c4a91;      /* Card backgrounds */
-  --ce-third-font-color: #c4c4c4;            /* Tertiary text */
+  --ce-primary-background-color: #000025; /* Main background/darkest shade */
+  --ce-primary-font-color: #5fb3ce; /* Primary text color */
+  --ce-secondary-background-color: #000099; /* Secondary elements/header */
+  --ce-secondary-font-color: #d2d2d2; /* Secondary text */
+  --ce-third-background-color: #1c4a91; /* Card backgrounds */
+  --ce-third-font-color: #c4c4c4; /* Tertiary text */
 }
 
 /* Global page layout */
-html, body {
+html,
+body {
   background-color: var(--ce-primary-background-color);
   color: var(--ce-primary-font-color);
   padding: 0;
   margin: 0;
-  overflow: hidden;        /* Prevent default page scrolling */
-  min-width: 250px;        /* Minimum mobile-friendly width */
+  overflow: hidden; /* Prevent default page scrolling */
+  min-width: 250px; /* Minimum mobile-friendly width */
 }
 
 /*** Overlay Components *******************************************************/
@@ -35,12 +36,12 @@ html, body {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 7;             /* Mid-layer positioning */
-  display: none;          /* Hidden by default */
+  z-index: 7; /* Mid-layer positioning */
+  display: none; /* Hidden by default */
 }
 
 #backdrop.show {
-  display: block;         /* Activated via JavaScript */
+  display: block; /* Activated via JavaScript */
 }
 
 /*** Header Styles ************************************************************/
@@ -48,16 +49,17 @@ html, body {
 /* Header styling */
 header {
   background-color: var(--ce-secondary-background-color);
-  height: 3rem;           /* Fixed header height */
+  height: 3rem; /* Fixed header height */
   border-radius: 0 0 0.5rem 0.5rem;
-  z-index: 10;            /* Ensure header stays on top */
-  position: sticky;
+  z-index: 10; /* Ensure header stays on top */
+  position: fixed;
+  width: 100%;
 }
 
 /* Header title styling */
 h1 {
   margin: 0;
-  padding: 0.5rem 0.5rem;
+  padding: 0.5rem 0.5rem 0 0.5rem;
 }
 
 /* Header span styling */
@@ -96,11 +98,12 @@ nav {
 
 /* Hidden navigation bar */
 nav[hidden] {
-  display: none;  
+  display: none;
 }
 
 /* Navigation span and content filters styling */
-nav > span, nav > div.content-filters > span {
+nav > span,
+nav > div.content-filters > span {
   margin-top: 0.55rem;
   display: inline-block;
   z-index: 2;
@@ -108,7 +111,8 @@ nav > span, nav > div.content-filters > span {
 }
 
 /* Navigation span and content filters hover effect */
-nav > span:hover, nav > div.content-filters > span:hover {
+nav > span:hover,
+nav > div.content-filters > span:hover {
   background-color: var(--ce-primary-background-color);
 }
 
@@ -176,8 +180,14 @@ nav > div.search-bar:last-child ul li {
 }
 
 /* Search bar dropdown list item hover and selected effect */
-nav > div:last-child ul li:hover, nav > div:last-child ul li.selected {
+nav > div:last-child ul li:hover,
+nav > div:last-child ul li.selected {
   background-color: var(--ce-primary-background-color);
+}
+
+.bumper {
+  width: 100%;
+  height: 5rem;
 }
 
 /*** Main Gallery Layout ******************************************************/
@@ -209,7 +219,7 @@ main > #gallery .push {
 }
 
 /* Gallery card and preview styling */
-main > #gallery .card, 
+main > #gallery .card,
 main > #gallery .preview,
 main > #gallery .stat-part {
   text-align: center;
@@ -276,7 +286,6 @@ main > #gallery .preview span {
   vertical-align: middle;
 }
 
-
 main > #gallery .stat-part {
   border: 1px solid var(--ce-third-background-color);
   max-height: none;
@@ -324,7 +333,12 @@ main > #gallery .stat-part ul li {
   padding-left: 40px;
 }
 
-main > #gallery .stat-part > span:not(:first-child) input:checked + label::after {
+main
+  > #gallery
+  .stat-part
+  > span:not(:first-child)
+  input:checked
+  + label::after {
   content: "▼";
 }
 
@@ -412,7 +426,8 @@ main > #gallery .stat-part input {
   left: calc(50% - 45px);
   border-width: 8px;
   border-style: solid;
-  border-color: var(--ce-third-background-color) var(--ce-third-font-color) var(--ce-third-font-color);
+  border-color: var(--ce-third-background-color) var(--ce-third-font-color)
+    var(--ce-third-font-color);
   border-radius: 100%;
   animation: rotation 0.7s infinite linear;
 }
@@ -421,12 +436,21 @@ main > #gallery .stat-part input {
 
 /* Rotation animation */
 @keyframes rotation {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(359deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
 }
 
 /* Flash animation */
 @keyframes flash {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }     /* Create blinking effect */
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  } /* Create blinking effect */
 }
