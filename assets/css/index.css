@@ -225,6 +225,7 @@ main > #gallery .stat-part {
   border-radius: 1rem;
   min-width: 300px;
   max-width: 300px;
+  min-height: 300px;
   max-height: 300px;
   margin: 0.5rem auto;
   overflow: hidden;
