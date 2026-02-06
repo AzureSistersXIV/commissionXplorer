@@ -199,6 +199,8 @@ function loadArtists() {
   const spinner = document.querySelector("#spinner");
   spinner.classList.add("loading");
 
+  document.querySelector("#spinnerNumber").innerText = "";
+
   fetch(`${host}api/artists.php?isNsfw=${isNsfw}`)
     .then(res => res.json())
     .then(artists => {
