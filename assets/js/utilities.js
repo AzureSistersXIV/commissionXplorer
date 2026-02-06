@@ -348,6 +348,7 @@ async function setThumbnails(artist, artworks) {
   } catch (error) {
     console.error("Gallery load failed:", error.message);
   } finally {
+    artworks.forEach(artwork => generatePreview(`../${artwork}`));
     spinner.classList.remove("loading");
   }
 }

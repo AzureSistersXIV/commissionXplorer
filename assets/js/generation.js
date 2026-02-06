@@ -239,7 +239,7 @@ function generatePreview(link) {
   // Configure image based on type
   switch (true) {
     case pictureTypes.includes(extension):
-      img.src = link.replace("../commissions/", host + "thumbs/");
+      img.src = link.replace("../commissions/", host + "thumbs/") + ".webp";
       break;
     case videoTypes.includes(extension):
       img.src = "./assets/img/film.png";
