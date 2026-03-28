@@ -28,7 +28,7 @@ body {
   margin: 0; /* Remove default margin */
   padding: 0; /* Remove default padding */
   font-family: "Roboto", sans-serif; /* Set font family */
-  background-color: var(--ce-secondary-background-color); /* Set dark background color */
+  background-color: var(--ce-primary-background-color); /* Set dark background color */
   display: flex; /* Use flexbox for layout */
   justify-content: center; /* Center content horizontally */
   align-items: flex-start; /* Align content at the top */
@@ -55,6 +55,7 @@ hr {
   padding: 20px; /* Add inner spacing */
   min-width: 250px; /* Set minimum width */
   max-width: 250px; /* Set maximum width */
+  border: 1px solid var(--ce-secondary-background-color);
 }
 
 /* Use the panel's ID as a title via pseudo-element */
@@ -172,6 +173,7 @@ hr {
   background-color: var(--ce-primary-background-color);
   border-radius: 5px; /* Add rounded corners */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.9); /* Add shadow for depth */
+  border: 1px solid var(--ce-secondary-background-color);
 }
 
 /* ======================
