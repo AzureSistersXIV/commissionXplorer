@@ -443,6 +443,9 @@ function showNavBar() {
  * @note Clears previous suggestions with emptySuggestions()
  */
 function showSuggestions(event) {
+
+  const forceUnique = false;
+
   emptySuggestions();
   const search = event.currentTarget.value.toLowerCase();
   const cards = document.querySelectorAll(".card");
@@ -457,7 +460,7 @@ function showSuggestions(event) {
 
       if (included) {
         const li = document.createElement("li");
-        li.innerHTML = cardName;
+        li.innerHTML = cardName.charAt(0).toUpperCase() + cardName.substring(1);
         li.dataset.card = `#${cardName}`;
         li.dataset.pos = idx;
         document.querySelector("#suggestions").appendChild(li);
@@ -468,6 +471,11 @@ function showSuggestions(event) {
     document.querySelector("#backdrop").classList = "show";
     document.querySelector("#results").innerText = `${document.querySelector("#suggestions").childElementCount} / ${cards.length}`;
     addKeyDown(event.currentTarget, navigateSuggestions);
+
+    if(forceUnique && document.querySelector("#suggestions").childElementCount === 1){
+      event.currentTarget.value = document.querySelector("#suggestions li").innerText;
+      showUniqueSuggestion();
+    }
   }
 }
 
