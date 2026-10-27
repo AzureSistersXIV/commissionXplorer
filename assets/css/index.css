@@ -7,12 +7,18 @@
 
 /* Theme color definitions */
 :root {
-  --ce-primary-background-color: #000025; /* Main background/darkest shade */
-  --ce-primary-font-color: #5fb3ce; /* Primary text color */
-  --ce-secondary-background-color: #000099; /* Secondary elements/header */
-  --ce-secondary-font-color: #d2d2d2; /* Secondary text */
-  --ce-third-background-color: #1c4a91; /* Card backgrounds */
-  --ce-third-font-color: #c4c4c4; /* Tertiary text */
+  --ce-primary-background-color: #000025;
+  /* Main background/darkest shade */
+  --ce-primary-font-color: #5fb3ce;
+  /* Primary text color */
+  --ce-secondary-background-color: #000099;
+  /* Secondary elements/header */
+  --ce-secondary-font-color: #d2d2d2;
+  /* Secondary text */
+  --ce-third-background-color: #1c4a91;
+  /* Card backgrounds */
+  --ce-third-font-color: #c4c4c4;
+  /* Tertiary text */
 }
 
 /* Global page layout */
@@ -22,8 +28,10 @@ body {
   color: var(--ce-primary-font-color);
   padding: 0;
   margin: 0;
-  overflow: hidden; /* Prevent default page scrolling */
-  min-width: 250px; /* Minimum mobile-friendly width */
+  overflow: hidden;
+  /* Prevent default page scrolling */
+  min-width: 250px;
+  /* Minimum mobile-friendly width */
 }
 
 /*** Overlay Components *******************************************************/
@@ -36,12 +44,15 @@ body {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 7; /* Mid-layer positioning */
-  display: none; /* Hidden by default */
+  z-index: 7;
+  /* Mid-layer positioning */
+  display: none;
+  /* Hidden by default */
 }
 
 #backdrop.show {
-  display: block; /* Activated via JavaScript */
+  display: block;
+  /* Activated via JavaScript */
 }
 
 /*** Header Styles ************************************************************/
@@ -49,8 +60,10 @@ body {
 /* Header styling */
 header {
   background-color: var(--ce-secondary-background-color);
-  height: 3rem; /* Fixed header height */
-  z-index: 10; /* Ensure header stays on top */
+  height: 3rem;
+  /* Fixed header height */
+  z-index: 10;
+  /* Ensure header stays on top */
   position: fixed;
   width: 100%;
 }
@@ -62,7 +75,7 @@ h1 {
 }
 
 /* Header span styling */
-header > span {
+header>span {
   padding: 0.5rem;
   position: absolute;
   top: 0;
@@ -101,8 +114,8 @@ nav[hidden] {
 }
 
 /* Navigation span and content filters styling */
-nav > span,
-nav > div.content-filters > span {
+nav>span,
+nav>div.content-filters>span {
   margin-top: 0.55rem;
   display: inline-block;
   z-index: 2;
@@ -110,20 +123,20 @@ nav > div.content-filters > span {
 }
 
 /* Navigation span and content filters hover effect */
-nav > span:hover,
-nav > div.content-filters > span:hover {
+nav>span:hover,
+nav>div.content-filters>span:hover {
   background-color: var(--ce-primary-background-color);
 }
 
 /* Checked radio button styling */
-nav > span input[type="radio"]:checked + label,
-nav > div.content-filters > span input[type="radio"]:checked + label {
+nav>span input[type="radio"]:checked+label,
+nav>div.content-filters>span input[type="radio"]:checked+label {
   border-color: var(--ce-primary-font-color);
 }
 
 /* Navigation label styling */
-nav > span label,
-nav > div.content-filters > span label {
+nav>span label,
+nav>div.content-filters>span label {
   padding: 0.5rem;
   margin: 0;
   cursor: pointer;
@@ -133,13 +146,13 @@ nav > div.content-filters > span label {
 }
 
 /* Hide radio button input */
-nav > span input,
-nav > div.content-filters > span input {
+nav>span input,
+nav>div.content-filters>span input {
   display: none;
 }
 
 /* Search bar styling */
-nav > div.search-bar {
+nav>div.search-bar {
   display: inline-flex;
   position: absolute;
   right: 1rem;
@@ -151,12 +164,12 @@ nav > div.search-bar {
 }
 
 /* Search bar results padding */
-nav > div.search-bar #results {
+nav>div.search-bar #results {
   padding: 0 0.5rem;
 }
 
 /* Search bar dropdown list styling */
-nav > div.search-bar:last-child ul {
+nav>div.search-bar:last-child ul {
   position: absolute;
   right: 0;
   top: 37px;
@@ -171,7 +184,7 @@ nav > div.search-bar:last-child ul {
 }
 
 /* Search bar dropdown list item styling */
-nav > div.search-bar:last-child ul li {
+nav>div.search-bar:last-child ul li {
   background-color: var(--ce-secondary-background-color);
   padding: 1rem 0.5rem;
   border-radius: 0.5rem;
@@ -179,8 +192,8 @@ nav > div.search-bar:last-child ul li {
 }
 
 /* Search bar dropdown list item hover and selected effect */
-nav > div:last-child ul li:hover,
-nav > div:last-child ul li.selected {
+nav>div:last-child ul li:hover,
+nav>div:last-child ul li.selected {
   background-color: var(--ce-primary-background-color);
 }
 
@@ -193,12 +206,13 @@ nav > div:last-child ul li.selected {
 
 /* Main content area styling */
 main {
-  height: calc(100vh - 3.33rem); /* Full viewport minus header */
+  height: calc(100vh - 3.33rem);
+  /* Full viewport minus header */
   position: relative;
 }
 
 /* Gallery container styling */
-main > #gallery {
+main>#gallery {
   display: flex;
   flex-flow: row wrap;
   justify-content: space-evenly;
@@ -211,16 +225,16 @@ main > #gallery {
 }
 
 /* Gallery push element styling */
-main > #gallery .push {
+main>#gallery .push {
   display: block;
   margin-top: 2.5rem;
   width: 100%;
 }
 
 /* Gallery card and preview styling */
-main > #gallery .card,
-main > #gallery .preview,
-main > #gallery .stat-part {
+main>#gallery .card,
+main>#gallery .preview,
+main>#gallery .stat-part {
   text-align: center;
   border-radius: 1rem;
   min-width: 300px;
@@ -229,12 +243,11 @@ main > #gallery .stat-part {
   max-height: 300px;
   margin: 0.5rem auto;
   overflow: hidden;
-  cursor: pointer;
 }
 
 /* Gallery image container styling */
-main > #gallery .card .img-div,
-main > #gallery .preview .img-div {
+main>#gallery .card .img-div,
+main>#gallery .preview .img-div {
   background-color: var(--ce-third-background-color);
   position: relative;
   overflow: hidden;
@@ -244,21 +257,59 @@ main > #gallery .preview .img-div {
 }
 
 /* Gallery image styling */
-main > #gallery .card .img-div img,
-main > #gallery .preview .img-div img {
+main>#gallery .card .img-div img,
+main>#gallery .preview .img-div img {
   width: 100%;
 }
 
 /* Gallery audio and video styling */
-main > #gallery .preview .img-div audio,
-main > #gallery .preview .img-div video {
+main>#gallery .preview .img-div audio,
+main>#gallery .preview .img-div video {
   width: 100%;
 }
 
+main>#gallery .card .img-div .folder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url(../img/folder.svg);
+  background-position: center;
+  background-size: 80%;
+  background-repeat: no-repeat;
+  opacity: 0.7;
+  z-index: 1;
+  cursor: pointer;
+}
+
+main>#gallery .preview .img-div .zoom{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 15%;
+  height: 15%;
+  background-image: url(../img/magnify-plus.svg);
+  background-position: center;
+  background-size: 80%;
+  background-repeat: no-repeat;
+  opacity: 0.7;
+  z-index: 1;
+  cursor: pointer;
+}
+
+main>#gallery .card .img-div:hover .folder {
+    animation: shake 0.3s ease-in-out;
+}
+
+main>#gallery .preview .img-div:hover .zoom {
+    animation: zoom 0.5s ease-in-out infinite;
+}
+
 /* Gallery card and preview before pseudo-element styling */
-main > #gallery .card::before,
-main > #gallery .preview::before,
-main > #gallery .stat-part::before {
+main>#gallery .card::before,
+main>#gallery .preview::before,
+main>#gallery .stat-part::before {
   content: attr(id);
   display: block;
   padding: 0 0.5rem;
@@ -270,8 +321,8 @@ main > #gallery .stat-part::before {
 }
 
 /* Gallery card and preview searched animation */
-main > #gallery .card.searched,
-main > #gallery .preview.searched {
+main>#gallery .card.searched,
+main>#gallery .preview.searched {
   animation-duration: 0.8s;
   animation-name: flash;
   animation-iteration-count: 10;
@@ -279,46 +330,46 @@ main > #gallery .preview.searched {
 }
 
 /* Gallery card and preview span styling */
-main > #gallery .card span,
-main > #gallery .preview span {
+main>#gallery .card span,
+main>#gallery .preview span {
   display: inline-block;
   height: 100%;
   vertical-align: middle;
 }
 
-main > #gallery .stat-part {
+main>#gallery .stat-part {
   border: 1px solid var(--ce-third-background-color);
   max-height: none;
 }
 
-main > #gallery #TOTAL.stat-part {
+main>#gallery #TOTAL.stat-part {
   max-width: unset;
   width: 100%;
 }
 
-main > #gallery .stat-part > p {
+main>#gallery .stat-part>p {
   margin: unset;
   background-color: var(--ce-third-background-color);
   padding: 0.5rem 0;
 }
 
-main > #gallery .stat-part div {
+main>#gallery .stat-part div {
   font-size: large;
 }
 
-main > #gallery .stat-part label {
+main>#gallery .stat-part label {
   cursor: pointer;
   display: block;
 }
 
-main > #gallery .stat-part > span:not(:first-child) input + label::after {
+main>#gallery .stat-part>span:not(:first-child) input+label::after {
   content: "►";
   padding: 0 0.5rem;
   font-size: xx-small;
   vertical-align: middle;
 }
 
-main > #gallery .stat-part ul {
+main>#gallery .stat-part ul {
   display: none;
   list-style: none;
   text-align: justify;
@@ -328,33 +379,29 @@ main > #gallery .stat-part ul {
   background-color: var(--ce-primary-background-color);
 }
 
-main > #gallery .stat-part ul li {
+main>#gallery .stat-part ul li {
   padding: 0.5rem 0;
   padding-left: 40px;
 }
 
-main
-  > #gallery
-  .stat-part
-  > span:not(:first-child)
-  input:checked
-  + label::after {
+main>#gallery .stat-part>span:not(:first-child) input:checked+label::after {
   content: "▼";
 }
 
-main > #gallery .stat-part input[type="checkbox"]:checked ~ ul {
+main>#gallery .stat-part input[type="checkbox"]:checked~ul {
   display: block;
   padding: unset;
 }
 
-main > #gallery .stat-part input {
+main>#gallery .stat-part input {
   display: none;
 }
 
 /* Responsive styling for smaller screens */
 @media (max-width: 722px) {
-  main > #gallery .card,
-  main > #gallery .preview {
+
+  main>#gallery .card,
+  main>#gallery .preview {
     text-align: center;
     border: 1px solid var(--ce-secondary-background-color);
     border-radius: 1rem;
@@ -426,8 +473,7 @@ main > #gallery .stat-part input {
   left: calc(50% - 45px);
   border-width: 8px;
   border-style: solid;
-  border-color: var(--ce-third-background-color) var(--ce-third-font-color)
-    var(--ce-third-font-color);
+  border-color: var(--ce-third-background-color) var(--ce-third-font-color) var(--ce-third-font-color);
   border-radius: 100%;
   animation: rotation 0.7s infinite linear;
 }
@@ -439,6 +485,7 @@ main > #gallery .stat-part input {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(359deg);
   }
@@ -446,11 +493,45 @@ main > #gallery .stat-part input {
 
 /* Flash animation */
 @keyframes flash {
+
   0%,
   100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0;
-  } /* Create blinking effect */
+  }
+
+  /* Create blinking effect */
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25%,
+  75% {
+    transform: translateX(-5px) rotate(-5deg);
+  }
+  50% {
+    transform: translateX(5px) rotate(5deg);
+  }
+}
+
+@keyframes zoom {
+  0%, 
+  100% {
+    transform: scale(1);
+  }
+
+  25%,
+  75% {
+    transform: scale(1.2);
+  }
+
+  50% {
+    transform: scale(1.5);
+  }
 }

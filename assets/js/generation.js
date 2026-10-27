@@ -183,20 +183,24 @@ function generateMain(root) {
  * @returns {HTMLElement} The generated card element
  */
 function generateCard(artistName, thumb) {
+  // Container element creation
+  const container = document.createElement("div");
+  container.className = "img-div";
+
   // Image element setup
   const img = document.createElement("img");
   img.src = thumb.replace("../", host);
   img.alt = `picture by ${artistName}`;
+  container.appendChild(img);
 
   // Special handling for placeholder image
   if (thumb === "./assets/img/folder.png") {
     img.style.width = "200px";
+  } else {
+    const overlay = document.createElement("div");
+    overlay.classList = "folder";
+    container.appendChild(overlay);
   }
-
-  // Container element creation
-  const container = document.createElement("div");
-  container.className = "img-div";
-  container.appendChild(img);
 
   // Card element assembly
   const div = document.createElement("div");
@@ -269,11 +273,22 @@ function generatePreview(link) {
   img.alt = `Preview for ${link.replace("../", host)}`;
 
   // Create and append elements
-  const container = document.createElement("a");
+  var container;
+  if(pictureTypes.includes(extension)){
+    container = document.createElement("a");
+    container.href = link.replace("../", host);
+    container.target = "_blank";
+
+    const zoom = document.createElement("div");
+    zoom.classList = "zoom";
+    container.append(zoom);
+  } else{
+    container = document.createElement("div");
+  }
+
   container.className = "img-div";
-  container.href = link.replace("../", host);
-  container.target = "_blank";
   container.append(img);
+  
   if (addon !== undefined) {
     img.style.display = "none";
     container.append(addon);
