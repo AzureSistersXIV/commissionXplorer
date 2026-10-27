@@ -283,6 +283,10 @@ main>#gallery .card .img-div .folder {
   cursor: pointer;
 }
 
+main>#gallery .preview .img-div:has(.zoom){
+  cursor: zoom-in;
+}
+
 main>#gallery .preview .img-div .zoom{
   position: absolute;
   top: 0;
@@ -295,7 +299,6 @@ main>#gallery .preview .img-div .zoom{
   background-repeat: no-repeat;
   opacity: 0.7;
   z-index: 1;
-  cursor: pointer;
 }
 
 main>#gallery .card .img-div:hover .folder {
