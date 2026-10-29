@@ -13,12 +13,14 @@
  */
 const host = `https://naslku.synology.me/`;
 
+const service = "commissionXplorerAPI/";
+
 /**
  * API folder, relative to {@link host}. Must end with a slash.
  * Build endpoint URLs with {@link apiUrl} rather than concatenating by hand.
  * @type {string}
  */
-const API = "commissionXplorerAPI/api/";
+const API = "api/";
 
 /**
  * Builds the full URL of an API endpoint.
