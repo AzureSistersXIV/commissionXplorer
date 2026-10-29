@@ -23,7 +23,7 @@ const ICON_WIDTH = "200px";
  * @param {string} path
  * @returns {string}
  */
-const toHostUrl = (path) => path.replace("../", host);
+const toHostUrl = (path) => path.replace("../", `${host}`+API.split("/")[0]+`/`);
 
 /**
  * Returns the lowercase extension of a path or URL, or "" if the file name has none.
@@ -275,15 +275,16 @@ function generatePreview(link) {
   const extension = getExtension(link);
   const isPicture = pictureTypes.includes(extension);
   const fileUrl = toHostUrl(link);
+  console.log(fileUrl);
 
   const img = document.createElement("img");
-  img.alt = `Preview for ${fileUrl}`;
+  img.alt = `Preview for ${link}`;
 
   /** @type {HTMLVideoElement|HTMLAudioElement|null} Native player, for media files. */
   let player = null;
 
   if (isPicture) {
-    img.src = `${link.replace("../commissions/", `${host}thumbs/`)}.webp`;
+    img.src = `${link.replace("../commissions/", `${host}`+API.split("/")[0]+`/thumbs/`)}.webp`;
   } else if (videoTypes.includes(extension)) {
     img.src = "./assets/img/film.png";
     img.style.width = ICON_WIDTH;
