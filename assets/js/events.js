@@ -21,6 +21,7 @@ let isNsfw = false;
 document.addEventListener("DOMContentLoaded", () => {
   preventContextualMenu();
   setIsNsfw();
+  inclusive = [0, 1, 2, 3, 4].includes(parseNsfwParam());
   generateHeader(document.body);
   generateMain(document.body);
 

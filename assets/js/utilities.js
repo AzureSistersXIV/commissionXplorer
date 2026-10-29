@@ -31,6 +31,8 @@ const SUGGESTION_DELAY_MS = 500;
 /** When true, typing a prefix that matches a single artist selects it automatically. */
 const FORCE_UNIQUE_SUGGESTION = false;
 
+var inclusive;
+
 // *** Generic helpers ***
 
 /** Resolves after `ms` milliseconds. */
@@ -345,7 +347,7 @@ async function loadArtists(signal) {
 
   beginLoading();
   try {
-    const query = new URLSearchParams({ isNsfw });
+    const query = new URLSearchParams({ isNsfw, inclusive });
     const res = await fetch(`${apiUrl("artists.php")}?${query}`, { signal });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
@@ -566,6 +568,7 @@ function pushSearchParams(searchParams) {
  */
 function changeFilter(event) {
   const wantsNsfw = event.currentTarget.htmlFor === "nsfw";
+  inclusive = false;
   if (wantsNsfw === isNsfw) return;
 
   const searchParams = new URLSearchParams(window.location.search);
@@ -582,6 +585,7 @@ function changeFilter(event) {
  */
 function changeNsfwLevel(event) {
   const level = Number(event.currentTarget.value);
+  inclusive = true;
   if (level === isNsfw) return;
 
   const searchParams = new URLSearchParams(window.location.search);
