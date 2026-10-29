@@ -1,206 +1,151 @@
-// Base URL for API endpoints
-let API = "commissionXplorerAPI/";
-let host = `https://naslku.synology.me/${API}`;
-let page = "";
-// Global flag for NSFW content filtering
-var isNsfw;
+/**
+ * @file Application bootstrap and event-listener helpers.
+ *
+ * Depends on: utilities.js (setIsNsfw, checkNew, loadContent) and
+ * generation.js (generateHeader, generateMain).
+ */
 
+/**
+ * NSFW filter currently applied to the artist list.
+ * - `false` / `true`: SFW / NSFW (the two-button filter)
+ * - `0` to `4`: a content level (the dropdown filter, see generateHeader())
+ *
+ * Written by setIsNsfw() (utilities.js); sent to the API when loading artists.
+ * Beware that `0` is falsy: use `typeof isNsfw === "number"` to detect a level.
+ * @type {boolean|number}
+ */
+let isNsfw = false;
 
-document.addEventListener("DOMContentLoaded", function () {
-    preventContextualMenu();
-    setPageTitle();
-    setIsNsfw();
-    generateHeader(document.body);
-    generateMain(document.body);
-    
-    checkNew();
-    addNavigateSuccess(loadContent);
-    // addPopState(reloadPage);
-    loadContent();
+// *** Bootstrap ***
+
+document.addEventListener("DOMContentLoaded", () => {
+  preventContextualMenu();
+  setIsNsfw();
+  generateHeader(document.body);
+  generateMain(document.body);
+
+  checkNew();
+  addNavigateSuccess(loadContent); // re-render on every navigation, back/forward included
+  loadContent(); // initial render
 });
 
+// *** Navigation events ***
+
+/** Callbacks registered while the Navigation API is unavailable. */
+const navigationFallbackHandlers = new Set();
+
+/** True once history.pushState/replaceState have been wrapped. */
+let navigationFallbackInstalled = false;
+
 /**
- * Safely adds a navigation success handler, with fallback for unsupported browsers.
- * Uses History API and custom events to simulate Navigation API behavior.
+ * Emulates the Navigation API's "navigatesuccess" event for browsers without it.
+ *
+ * pushState() and replaceState() fire no event by themselves, so they are wrapped
+ * to notify the registered handlers, and popstate/hashchange are forwarded too.
+ * Safe to call several times: the wrapping is done only once.
+ * @private
  */
-function addNavigateSuccess(f) {
-    if (window.navigation) {
-      window.navigation.removeEventListener("navigatesuccess", f);
-      window.navigation.addEventListener("navigatesuccess", f);
-    } else {
-      // Initialize fallback with robust guard
-      if (!window._navigationFallback) {
-        Object.defineProperty(window, "_navigationFallback", {
-          value: {
-            handlers: new Set(),
-            setup() {
-              // Avoid double-patching
-              if (history.pushState._isMonkeyPatched) return;
-  
-              // Patch pushState/replaceState
-              const originalPushState = history.pushState;
-              history.pushState = function(...args) {
-                originalPushState.apply(this, args);
-                window.document.title = args[1];
-                window.dispatchEvent(new CustomEvent("fallbacknavigate", {
-                  detail: { url: window.location.href, state: args[0] }
-                }));
-              };
-              history.pushState._isMonkeyPatched = true;
-  
-              history.replaceState = function(...args) {
-                originalPushState.apply(this, args);
-                window.document.title = args[1];
-                window.dispatchEvent(new CustomEvent("fallbacknavigate", {
-                  detail: { url: window.location.href, state: args[0] }
-                }));
-              };
-              history.replaceState._isMonkeyPatched = true;
-  
-              // Unified event handler
-              const handler = () => {
-                const event = {
-                  destination: { url: window.location.href },
-                  state: history.state
-                };
-                window._navigationFallback.handlers.forEach(cb => cb(event));
-              };
-              window.addEventListener("popstate", handler);
-              window.addEventListener("hashchange", handler);
-              window.addEventListener("fallbacknavigate", handler);
-            }
-          },
-          writable: false,
-          configurable: false
-        });
-        window._navigationFallback.setup();
-      }
-  
-      // Register handler
-      window._navigationFallback.handlers.delete(f);
-      window._navigationFallback.handlers.add(f);
-    }
+function installNavigationFallback() {
+  if (navigationFallbackInstalled) return;
+  navigationFallbackInstalled = true;
+
+  const notify = () => {
+    // Same shape as the fields the Navigation API event would expose
+    const event = { destination: { url: window.location.href }, state: history.state };
+    navigationFallbackHandlers.forEach((handler) => handler(event));
+  };
+
+  for (const method of ["pushState", "replaceState"]) {
+    const original = history[method];
+    history[method] = function (...args) {
+      original.apply(this, args);
+      notify();
+    };
   }
 
-/**
- * Safely adds a popstate event listener to the window, ensuring duplicate listeners are removed first.
- * 
- * This function guarantees a single instance of the listener function is attached to the window's
- * popstate event by first removing any existing identical listeners before adding the new one.
- * 
- * @param {Function} f - The callback function to execute on popstate events.
- *                       Receives a PopStateEvent object as parameter.
- * 
- * @example
- * // Add a popstate handler to the window
- * addPopState((event) => {
- *   console.log('Popstate event:', event.state);
- * });
- * 
- * @note Important considerations:
- * - Uses reference-based comparison for listener removal
- * - Requires same function reference for proper removal
- * - Preserves other popstate listeners on the window
- */
-function addPopState(f){
-    // First remove existing listener to prevent duplicate handlers
-    window.removeEventListener("popstate", f);
-
-    // Add fresh listener for popstate events
-    window.addEventListener("popstate", f);
+  window.addEventListener("popstate", notify);
+  // Note: a fragment change fires both popstate and hashchange, so handlers may
+  // run twice. The app does not use fragments, so this does not matter today.
+  window.addEventListener("hashchange", notify);
 }
 
 /**
- * Safely adds an input event listener to an element, ensuring duplicate listeners are removed first
- * 
- * This function guarantees a single instance of the listener function is attached to the element's
- * input event by first removing any existing identical listeners before adding the new one.
- * 
- * @param {HTMLElement} e - The DOM element to attach the listener to
- * @param {Function} f - The callback function to execute on input events
- * 
- * @example
- * // Add a search handler to an input field
- * const searchInput = document.querySelector('#search');
- * addInput(searchInput, debounce(handleSearch, 300));
- * 
- * @note Important considerations:
- * - Uses reference-based comparison for listener removal
- * - Requires same function reference for proper removal
- * - Preserves other input listeners on the element
- * - Works with both 'input' and 'change' events for text elements
+ * Calls `handler` after each successful same-document navigation (pushState,
+ * back/forward). Uses the Navigation API when available, otherwise falls back to
+ * wrapping the History API (see {@link installNavigationFallback}).
+ *
+ * Registering the same function twice has no effect.
+ *
+ * @param {Function} handler - Called on each navigation.
  */
-function addInput(e, f) {
-    // First remove to prevent duplicate listeners
-    e.removeEventListener("input", f);
-    
-    // Add fresh listener with modern options
-    e.addEventListener("input", f);
+function addNavigateSuccess(handler) {
+  if (window.navigation) {
+    window.navigation.addEventListener("navigatesuccess", handler);
+    return;
+  }
+
+  installNavigationFallback();
+  navigationFallbackHandlers.add(handler);
+}
+
+// *** Listener helpers ***
+//
+// addEventListener() ignores a second registration of the same function with the
+// same options, so these helpers are idempotent as long as the same function
+// *reference* is passed each time. Anonymous functions are therefore registered
+// again on every call.
+
+/**
+ * Registers a "popstate" listener on the window (idempotent).
+ * @param {(event: PopStateEvent) => void} handler
+ */
+function addPopState(handler) {
+  window.addEventListener("popstate", handler);
 }
 
 /**
- * Ensures a single instance of a keydown event handler is attached to an element.
- * This safely replaces any existing keydown handler with the new one to prevent duplicates.
- * 
- * @param {HTMLElement} e - The target element for keydown events
- * @param {Function} f - The handler function to execute on keydown. 
- *                       Receives the KeyboardEvent as parameter.
- * 
+ * Registers an "input" listener on an element (idempotent).
+ * @param {HTMLElement} element
+ * @param {(event: Event) => void} handler
  * @example
- * // Add arrow key navigation to a div
- * addKeyDown(myDiv, (event) => {
- *   if (event.key === 'ArrowRight') advanceSlide();
- * });
- * 
- * @note Uses the pattern:
- * 1. Remove existing handler first to avoid duplicate listeners
- * 2. Add fresh handler to ensure only one instance exists
- * 
- * @warning Handler function identity matters - anonymous functions
- * cannot be removed. Use named functions or constant references
- * for proper removal.
+ * addInput(document.querySelector("#search"), showSuggestions);
  */
-function addKeyDown(e, f) {
-    // First remove any existing handler to prevent duplicates
-    e.removeEventListener("keydown", f);
-    
-    // Add the new handler with standard options (bubbles: true, capture: false)
-    e.addEventListener("keydown", f);
+function addInput(element, handler) {
+  element.addEventListener("input", handler);
 }
 
 /**
- * Safely adds a click event listener to an element by first removing any existing
- * identical listener to prevent duplicate event handlers.
- * 
- * @param {HTMLElement} e - The DOM element to attach/detach the click handler to
- * @param {Function} f - The callback function to be executed on click event
- * 
- * @example
- * // Add a click handler to a button
- * const myButton = document.getElementById('myBtn');
- * addClick(myButton, () => console.log('Clicked!'));
- * 
- * @remarks
- * - Uses removeEventListener() before addEventListener() to ensure single registration
- * - Both parameters are required for proper operation
- * - Function reference must be the same for removal to work
- * - Does not handle event propagation (bubbling/capturing) configuration
+ * Registers a "change" listener on an element (idempotent).
+ * @param {HTMLElement} element
+ * @param {(event: Event) => void} handler
  */
-function addClick(e, f) {
-    // First remove existing listener to prevent duplicates
-    e.removeEventListener("click", f);
-    
-    // Add fresh event listener with clean registration
-    e.addEventListener("click", f);
+function addChange(element, handler) {
+  element.addEventListener("change", handler);
 }
 
 /**
- * Prevents the default browser context menu from appearing.
- * This disables right-click context menus on the entire document.
+ * Registers a "keydown" listener on an element (idempotent).
+ * @param {HTMLElement} element
+ * @param {(event: KeyboardEvent) => void} handler
  */
+function addKeyDown(element, handler) {
+  element.addEventListener("keydown", handler);
+}
+
+/**
+ * Registers a "click" listener on an element (idempotent).
+ * @param {HTMLElement} element
+ * @param {(event: MouseEvent) => void} handler
+ * @example
+ * addClick(card, goToArtist);
+ */
+function addClick(element, handler) {
+  element.addEventListener("click", handler);
+}
+
+// *** Misc ***
+
+/** Disables the browser's context menu (right-click) on the whole document. */
 function preventContextualMenu() {
-  document.addEventListener("contextmenu", function (e) {
-    // Prevent the default context menu from showing
-    e.preventDefault();
-  });
+  document.addEventListener("contextmenu", (event) => event.preventDefault());
 }

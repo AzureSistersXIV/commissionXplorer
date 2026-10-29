@@ -1,1 +1,4 @@
 .vscode/*
+
+/assets/js/config.dev.js
+/assets/js/config.js
