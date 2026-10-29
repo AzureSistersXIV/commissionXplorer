@@ -28,7 +28,7 @@ const API = "api/";
  * @returns {string} e.g. "http://localhost:8000/api/artists.php"
  */
 function apiUrl(endpoint) {
-  return `${host}${API}${endpoint}`;
+  return `${host}${service}${API}${endpoint}`;
 }
 
 /** Site name, used in page titles and in the header. */
