@@ -22,4 +22,5 @@ deploys the site to GitHub Pages. To receive a Discord message after a successfu
 or failed run, add a repository Actions secret named `DISCORD_WEBHOOK_URL`
 containing the Discord webhook URL. Set the repository's Pages source to
 **GitHub Actions** under **Settings → Pages**; leaving it on branch deployment
-will keep a separate Pages workflow running.
+will keep a separate “pages build and deployment” workflow running in parallel.
+The workflow uses Node 24-compatible GitHub Actions and Ubuntu 24.04.
