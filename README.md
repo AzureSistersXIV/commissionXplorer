@@ -16,6 +16,10 @@ Or run the test runner, which installs dependencies before testing:
 npm run test:ci
 ```
 
-GitHub Actions runs the same runner on pushes, pull requests, and manual
-dispatches. To receive a Discord message after successful tests, add a repository
-Actions secret named `DISCORD_WEBHOOK_URL` containing the Discord webhook URL.
+The single GitHub Actions workflow runs tests for pushes, pull requests, and
+manual dispatches. On pushes to `main` and manual dispatches, it then builds and
+deploys the site to GitHub Pages. To receive a Discord message after a successful
+or failed run, add a repository Actions secret named `DISCORD_WEBHOOK_URL`
+containing the Discord webhook URL. Set the repository's Pages source to
+**GitHub Actions** under **Settings → Pages**; leaving it on branch deployment
+will keep a separate Pages workflow running.
