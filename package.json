@@ -1,0 +1,27 @@
+{
+  "name": "commissionxplorer",
+  "version": "1.0.0",
+  "description": "My own commissions explorer, sorted by artist and with preview of artwork style",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "devDependencies": {
+    "jsdom": "^24.1.0"
+  },
+  "scripts": {
+    "test": "node --test",
+    "test:ci": "bash scripts/run-tests.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AzureSistersXIV/commissionXplorer.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AzureSistersXIV/commissionXplorer/issues"
+  },
+  "homepage": "https://github.com/AzureSistersXIV/commissionXplorer#readme"
+}
