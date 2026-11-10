@@ -12,6 +12,18 @@ const videoTypes = ["mp4", "mov", "avi"];
 const audioTypes = ["wav", "mp3"];
 const textTypes = ["txt", "md"];
 
+/**
+ * Icons shown in place of a thumbnail for files that cannot be previewed as an
+ * image. Each one must exist in `assets/img/`: a wrong or stale path renders as
+ * a broken image, i.e. a preview card with nothing in it.
+ * @type {{video: string, audio: string, text: string}}
+ */
+const ICONS = {
+  video: "./assets/img/film.svg",
+  audio: "./assets/img/music.svg",
+  text: "./assets/img/text-box-edit.svg",
+};
+
 /** Images shorter than this (in px) are centred instead of stretched. */
 const SMALL_IMAGE_HEIGHT = 250;
 
@@ -274,8 +286,8 @@ function generateCard(artistName, thumb) {
  *
  * What is shown depends on the file extension:
  * - pictures: the generated .webp thumbnail, wrapped in a link to the original
- * - videos / audio: a generic icon replaced by a native player
- * - text files: a generic icon
+ * - videos / audio: an icon (see {@link ICONS}) replaced by a native player
+ * - text files: the {@link ICONS}.text icon
  * - anything else: the file itself, used as an image
  *
  * A preview for the same file replaces the previous one (matched by `id`), so
@@ -288,6 +300,11 @@ function generateCard(artistName, thumb) {
 function generatePreview(link) {
   const extension = getExtension(link);
   const isPicture = pictureTypes.includes(extension);
+  const isVideo = videoTypes.includes(extension);
+  const isAudio = audioTypes.includes(extension);
+  const isText = textTypes.includes(extension);
+  /** Icons are decorative: they must not be stretched like real artwork. */
+  const hasIcon = isVideo || isAudio || isText;
   const fileUrl = toHostUrl(link);
 
   const img = document.createElement("img");
@@ -300,9 +317,8 @@ function generatePreview(link) {
 
   if (isPicture) {
     img.src = toThumbnailUrl(link);
-  } else if (videoTypes.includes(extension)) {
-    img.src = "./assets/img/film.png";
-    img.style.width = ICON_WIDTH;
+  } else if (isVideo) {
+    img.src = ICONS.video;
 
     const source = document.createElement("source");
     source.type = `video/${extension}`;
@@ -310,16 +326,20 @@ function generatePreview(link) {
 
     player = document.createElement("video");
     player.appendChild(source);
-  } else if (audioTypes.includes(extension)) {
-    img.src = "./assets/img/music.png";
+  } else if (isAudio) {
+    img.src = ICONS.audio;
 
     player = document.createElement("audio");
     player.src = fileUrl;
-  } else if (textTypes.includes(extension)) {
-    img.src = "./assets/img/file.png";
-    img.style.width = ICON_WIDTH;
+  } else if (isText) {
+    img.src = ICONS.text;
   } else {
     img.src = fileUrl;
+  }
+
+  // Icons keep a fixed, centred size (margin auto in the flex container)
+  if (hasIcon) {
+    Object.assign(img.style, { width: ICON_WIDTH, height: "auto", margin: "auto" });
   }
 
   if (player) {
@@ -349,12 +369,15 @@ function generatePreview(link) {
     container.appendChild(player);
   }
 
-  img.onload = () => {
-    if (img.naturalHeight >= SMALL_IMAGE_HEIGHT) return;
+  // Only real artwork is stretched to the card; icons keep their own size
+  if (!hasIcon) {
+    img.onload = () => {
+      if (img.naturalHeight >= SMALL_IMAGE_HEIGHT) return;
 
-    Object.assign(img.style, { width: "unset", height: "100%" });
-    Object.assign(container.style, { display: "flex", justifyContent: "center" });
-  };
+      Object.assign(img.style, { width: "unset", height: "100%" });
+      Object.assign(container.style, { display: "flex", justifyContent: "center" });
+    };
+  }
 
   // The id identifies the file (last two path segments, spaces removed)
   const preview = document.createElement("div");

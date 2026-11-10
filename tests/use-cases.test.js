@@ -225,6 +225,42 @@ test('GIF previews use the expected WebP thumbnail path and retain the original 
   assert.equal(link.href, 'https://naslku.synology.me/commissionXplorerAPI/commissions/Artist/faded.gif');
 });
 
+test('text previews use the bundled text icon, whatever the file path', () => {
+  const { window } = loadApp();
+  const preview = window.generatePreview(
+    '../commissions/Aika_nrt/A Night for girls across the worlds/üy0611üzA night/Japanese_export.txt'
+  );
+  const image = preview.querySelector('img');
+
+  assert.equal(image.src, 'https://example.com/assets/img/text-box-edit.svg');
+  assert.equal(image.style.width, '200px');
+});
+
+test('video and audio previews use the bundled icons', () => {
+  const { window } = loadApp();
+  const video = window.generatePreview('../commissions/Artist/clip.mp4');
+  const audio = window.generatePreview('../commissions/Artist/track.mp3');
+
+  assert.equal(video.querySelector('img').src, 'https://example.com/assets/img/film.svg');
+  assert.equal(audio.querySelector('img').src, 'https://example.com/assets/img/music.svg');
+});
+
+test('every icon referenced by the app scripts exists in assets/img', () => {
+  const referenced = new Set();
+
+  for (const script of appScripts) {
+    const source = readFileSync(path.join(repoRoot, script), 'utf8');
+    for (const match of source.matchAll(/\.\/assets\/img\/[\w.-]+/g)) {
+      referenced.add(match[0]);
+    }
+  }
+
+  assert.ok(referenced.size > 0);
+  for (const icon of referenced) {
+    assert.equal(existsSync(path.join(repoRoot, icon)), true, `${icon} is missing`);
+  }
+});
+
 test('artwork previews render progressively without changing artwork order', async () => {
   const { window } = loadApp();
   await wait(50);
