@@ -175,29 +175,33 @@ function generateMain(root) {
   gallery.setAttribute("aria-label", "Content gallery");
 
   // Loading indicator. #progressMore is no longer written to by any script;
-  // it is kept in case the stylesheet still targets it.
-  const spinnerLoad = document.createElement("div");
-  spinnerLoad.id = "spinnerLoad";
-  spinnerLoad.className = "loading-text";
-  spinnerLoad.setAttribute("role", "status");
-  spinnerLoad.setAttribute("aria-live", "polite");
-  spinnerLoad.innerHTML = "Loading<div id='progressMore'></div>";
+// it is kept in case the stylesheet still targets it.
+const spinnerBackdrop = document.createElement("div");
+spinnerBackdrop.className = "spinner-backdrop";
 
-  const spinnerNumber = document.createElement("div");
-  spinnerNumber.id = "spinnerNumber";
-  spinnerNumber.className = "loading-text";
-  spinnerNumber.setAttribute("aria-live", "polite");
+const spinnerLoad = document.createElement("div");
+spinnerLoad.id = "spinnerLoad";
+spinnerLoad.className = "loading-text";
+spinnerLoad.setAttribute("role", "status");
+spinnerLoad.setAttribute("aria-live", "polite");
+spinnerLoad.innerHTML = "Loading<div id='progressMore'></div>";
 
-  const spinner = document.createElement("div");
-  spinner.id = "spinner";
-  spinner.className = "spinner";
-  spinner.append(spinnerLoad, spinnerNumber);
+const spinnerNumber = document.createElement("div");
+spinnerNumber.id = "spinnerNumber";
+spinnerNumber.className = "loading-text";
+spinnerNumber.setAttribute("aria-live", "polite");
 
-  const backdrop = document.createElement("div");
-  backdrop.id = "backdrop";
-  backdrop.setAttribute("role", "dialog");
-  backdrop.setAttribute("aria-modal", "true");
-  backdrop.setAttribute("aria-hidden", "true");
+const spinner = document.createElement("div");
+spinner.id = "spinner";
+spinner.className = "spinner";
+spinner.append(spinnerBackdrop, spinnerLoad, spinnerNumber);
+
+// Shared backdrop, still used for modals and previews (not for the spinner)
+const backdrop = document.createElement("div");
+backdrop.id = "backdrop";
+backdrop.setAttribute("role", "dialog");
+backdrop.setAttribute("aria-modal", "true");
+backdrop.setAttribute("aria-hidden", "true");
 
   const main = document.createElement("main");
   main.append(gallery, spinner, backdrop);

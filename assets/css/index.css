@@ -8,11 +8,11 @@
 :root {
   --sfw-color: #0b812e;
   --nsfw-color: #a50505;
-  --ce-primary-background-color: #000025;    /* Main background / darkest shade */
-  --ce-primary-font-color: #5fb3ce;          /* Primary text color */
-  --ce-secondary-background-color: #000099;  /* Secondary elements / header */
+  --ce-primary-background-color: #0a1128; /* Main background / darkest shade */
+  --ce-primary-font-color: #8fb8cc; /* Primary text color */
+  --ce-secondary-background-color: #1a2f5c; /* Secondary elements / header */
   --ce-secondary-font-color: #d2d2d2;        /* Secondary text */
-  --ce-third-background-color: #1c4a91;      /* Card backgrounds */
+  --ce-third-background-color: #2c4a73; /* Card backgrounds */
   --ce-third-font-color: #c4c4c4;            /* Tertiary text */
 }
 
@@ -397,10 +397,19 @@ main > #gallery .stat-part input {
   display: none;
   padding: 50px;
   text-align: center;
-  z-index: 5;
+  z-index: 20;                 /* above header/nav (10) and #backdrop (7); creates the stacking context for the overlay */
   position: absolute;
   top: 50%;
   left: calc(50% - 45px);
+}
+
+/* Overlay owned by the spinner: covers only the main area (same offset as main's height calc),
+   so the header stays visible */
+.spinner .spinner-backdrop {
+  position: fixed;
+  inset: 3.33rem 0 0 0;        /* top | right | bottom | left */
+  z-index: -1;                 /* behind ring/text, but above the rest of the page */
+  background-color: var(--ce-primary-background-color);
 }
 
 .spinner.loading {
