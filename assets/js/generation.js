@@ -26,6 +26,14 @@ const ICON_WIDTH = "200px";
 const toHostUrl = (path) => path.replace("../", `${host}${service}`);
 
 /**
+ * Builds the WebP thumbnail URL corresponding to a commission image.
+ * @param {string} commissionPath
+ * @returns {string}
+ */
+const toThumbnailUrl = (commissionPath) =>
+  `${toHostUrl(commissionPath.replace("../commissions/", "../thumbs/"))}.webp`;
+
+/**
  * Returns the lowercase extension of a path or URL, or "" if the file name has none.
  * @param {string} path
  * @returns {string}
@@ -277,7 +285,6 @@ function generatePreview(link) {
   const extension = getExtension(link);
   const isPicture = pictureTypes.includes(extension);
   const fileUrl = toHostUrl(link);
-  console.log(fileUrl);
 
   const img = document.createElement("img");
   img.alt = `Preview for ${link}`;
@@ -288,7 +295,7 @@ function generatePreview(link) {
   let player = null;
 
   if (isPicture) {
-    img.src = `${link.replace("../commissions/", `${host}${service}/thumbs/`)}.webp`;
+    img.src = toThumbnailUrl(link);
   } else if (videoTypes.includes(extension)) {
     img.src = "./assets/img/film.png";
     img.style.width = ICON_WIDTH;

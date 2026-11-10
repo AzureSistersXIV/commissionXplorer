@@ -212,6 +212,19 @@ test('UC5: artwork previews are generated for supported media types', () => {
   assert.equal(preview.querySelector('img').decoding, 'async');
 });
 
+test('GIF previews use the expected WebP thumbnail path and retain the original link', () => {
+  const { window } = loadApp();
+  const preview = window.generatePreview('../commissions/Artist/faded.gif');
+  const image = preview.querySelector('img');
+  const link = preview.querySelector('a');
+
+  assert.equal(
+    image.src,
+    'https://naslku.synology.me/commissionXplorerAPI/thumbs/Artist/faded.gif.webp'
+  );
+  assert.equal(link.href, 'https://naslku.synology.me/commissionXplorerAPI/commissions/Artist/faded.gif');
+});
+
 test('artwork previews render progressively without changing artwork order', async () => {
   const { window } = loadApp();
   await wait(50);
