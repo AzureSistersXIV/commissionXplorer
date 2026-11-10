@@ -46,7 +46,10 @@ function getStats() {
         const error = document.createElement("div");
         error.classList = "panel";
         error.id = "Error";
-        error.innerHTML = '<div class="stat">' + stats.error + "</div>";
+        const message = document.createElement("div");
+        message.className = "stat";
+        message.textContent = stats.error;
+        error.appendChild(message);
         document.body.appendChild(error);
 
         return;
@@ -59,7 +62,7 @@ function getStats() {
       generatePanels(stats);
 
       // Add a horizontal line for visual separation
-      document.body.innerHTML += "<hr>";
+      document.body.appendChild(document.createElement("hr"));
 
       // Generate the artists table
       generateArtistsTable(stats);
@@ -250,7 +253,7 @@ function generateTable(stats, label) {
       const selectSearch = document.createElement("select");
       ["", "Yes", "No"].forEach((answer) => {
         let option = document.createElement("option");
-        option.innerText = answer; // Set the option text
+        option.textContent = answer;
         option.value = answer; // Set the option value
         selectSearch.appendChild(option);
       });
@@ -266,28 +269,37 @@ function generateTable(stats, label) {
   table.appendChild(body);
 
   // Populate the table rows with artist data
+  const rows = document.createDocumentFragment();
   Object.entries(stats.artists.details).forEach(([idx, artist]) => {
     const commissions = stats.commissions.details[idx][1]; // Get the number of commissions
     const thumbnails = stats.thumbnails.details[idx][1]; // Get the number of thumbnails
 
+    const isSfw = stats.sfw[idx];
     const row = document.createElement("tr");
-    row.classList = idx % 2 === 0 ? "even" : "odd"; // Add alternating row classes
-    row.innerHTML = `
-            <td>${artist}</td>
-            <td class='${stats.sfw[idx] ? "sfw" : "nsfw"}'>${
-      stats.sfw[idx] ? "Yes" : "No"
-    }</td>
-            <td>${calculatePercentage(commissions, totalCommissions)}%</td>
-            <td>${
-              stats.sfw[idx]
-                ? calculatePercentage(commissions, totalParts[0])
-                : calculatePercentage(commissions, totalParts[1])
-            }%</td>
-            <td>${commissions}</td>
-            <td>${thumbnails}</td>
-            <td>${calculatePercentage(thumbnails, commissions)}%</td>`;
-    body.appendChild(row); // Append the row to the table body
+    row.className = idx % 2 === 0 ? "even" : "odd";
+    const values = [
+      artist,
+      isSfw ? "Yes" : "No",
+      `${calculatePercentage(commissions, totalCommissions)}%`,
+      `${
+        isSfw
+          ? calculatePercentage(commissions, totalParts[0])
+          : calculatePercentage(commissions, totalParts[1])
+      }%`,
+      commissions,
+      thumbnails,
+      `${calculatePercentage(thumbnails, commissions)}%`,
+    ];
+
+    values.forEach((value, column) => {
+      const cell = document.createElement("td");
+      cell.textContent = String(value);
+      if (column === 1) cell.className = isSfw ? "sfw" : "nsfw";
+      row.appendChild(cell);
+    });
+    rows.appendChild(row);
   });
+  body.appendChild(rows);
 
   // Hide columns based on the initial filter value
   hideColumns(table.querySelector("select").value);
@@ -312,12 +324,12 @@ function searchColumn(event) {
       const fieldValue = [0, 2, 3, 6].includes(col)
         ? row
             .querySelector(`td:nth-child(${col + 1})`) // Get the cell in the current column.
-            .innerText.trim()
+            .textContent.trim()
             .substring(0, searchValue.length)
             .toLowerCase() // Normalize the cell value.
         : row
             .querySelector(`td:nth-child(${col + 1})`)
-            .innerText.trim()
+            .textContent.trim()
             .toLowerCase();
 
       let colArray;
@@ -371,7 +383,7 @@ function selectValue(event) {
     .forEach((row) => {
       const fieldValue = row.querySelector(
         `td:nth-child(${col + 1})`
-      ).innerText; // Get the cell value in the current column.
+      ).textContent; // Get the cell value in the current column.
       let colArray;
 
       if (row.dataset.hidden !== undefined) {
@@ -554,12 +566,13 @@ function sortTable(table) {
     return 0;
   });
 
-  // Update DOM
-  tbody.innerHTML = "";
+  // Replace all rows in one DOM operation
+  const sortedRows = document.createDocumentFragment();
   rows.forEach((row, idx) => {
     row.classList = idx % 2 === 0 ? "even" : "odd"; // Add alternating row classes
-    tbody.appendChild(row);
+    sortedRows.appendChild(row);
   });
+  tbody.replaceChildren(sortedRows);
 }
 
 /**
@@ -590,23 +603,14 @@ function createToggleSection(label, stats, type) {
   if (type === "commissions") totalCommissions = total;
   const percentage = calculatePercentage(stats.sfw[type].count, total);
 
-  const section = document.createElement("div");
-  section.innerHTML = `
-        <input type="checkbox" id="checkbox-${label}">
-        <label class="stat" for="checkbox-${label}">
-            ${label}: ${total}
-        </label>
-        <div class="stat-container">
-            <div class="pie-chart" id="ratio-${type.toLowerCase()}" 
-                 style="--ratio-var: ${percentage}%"></div>
-            <div class="values">
-                <div class="sfw">sfw: ${percentage}%</div>
-                <div class="nsfw">nsfw: ${100 - percentage}%</div>
-            </div>
-        </div>
-    `;
-
-  return section;
+  return createStatSection(
+    `checkbox-${label}`,
+    `${label}: ${total}`,
+    `ratio-${type.toLowerCase()}`,
+    percentage,
+    `sfw: ${percentage}%`,
+    `nsfw: ${100 - percentage}%`
+  );
 }
 
 /**
@@ -621,26 +625,14 @@ function createImageSubsection(data, type) {
   const others = data.commissions.count - images;
   const percentage = calculatePercentage(images, data.commissions.count);
 
-  const section = document.createElement("div");
-  section.innerHTML = `
-        <input type="checkbox" id="checkbox-images-${type}">
-        <label class="stat" for="checkbox-images-${type}">
-            Pictures: ${images} - Others: ${others}
-        </label>
-        <div class="stat-container">
-            <div class="pie-chart" id="ratio-images-${type}" 
-                 style="--ratio-var: ${percentage}%"></div>
-            <div class="values">
-                <div class="sfw">pictures: ${percentage}%</div>
-                <div class="nsfw">others: ${calculatePercentage(
-                  others,
-                  data.commissions.count
-                )}%</div>
-            </div>
-        </div>
-    `;
-
-  return section;
+  return createStatSection(
+    `checkbox-images-${type}`,
+    `Pictures: ${images} - Others: ${others}`,
+    `ratio-images-${type}`,
+    percentage,
+    `pictures: ${percentage}%`,
+    `others: ${calculatePercentage(others, data.commissions.count)}%`
+  );
 }
 
 /**
@@ -656,24 +648,49 @@ function createImageRatioSection(stats) {
   const others = totalCommissions - totalImages;
   const percentage = calculatePercentage(totalImages, totalCommissions);
 
-  const section = document.createElement("div");
-  section.innerHTML = `
-        <input type="checkbox" id="checkbox-images-total">
-        <label class="stat" for="checkbox-images-total">
-            Images: ${totalImages} - Others: ${others}
-        </label>
-        <div class="stat-container">
-            <div class="pie-chart" id="ratio-images" 
-                 style="--ratio-var: ${percentage}%"></div>
-            <div class="values">
-                <div class="sfw">pictures: ${percentage}%</div>
-                <div class="nsfw">others: ${
-                  Math.round((100 - percentage + Number.EPSILON) * 100) / 100
-                }%</div>
-            </div>
-        </div>
-    `;
+  return createStatSection(
+    "checkbox-images-total",
+    `Images: ${totalImages} - Others: ${others}`,
+    "ratio-images",
+    percentage,
+    `pictures: ${percentage}%`,
+    `others: ${Math.round((100 - percentage + Number.EPSILON) * 100) / 100}%`
+  );
+}
 
+function createStatSection(inputId, labelText, chartId, percentage, sfwText, nsfwText) {
+  const input = document.createElement("input");
+  input.type = "checkbox";
+  input.id = inputId;
+
+  const label = document.createElement("label");
+  label.className = "stat";
+  label.htmlFor = inputId;
+  label.textContent = labelText;
+
+  const chart = document.createElement("div");
+  chart.className = "pie-chart";
+  chart.id = chartId;
+  chart.style.setProperty("--ratio-var", `${percentage}%`);
+
+  const sfw = document.createElement("div");
+  sfw.className = "sfw";
+  sfw.textContent = sfwText;
+
+  const nsfw = document.createElement("div");
+  nsfw.className = "nsfw";
+  nsfw.textContent = nsfwText;
+
+  const values = document.createElement("div");
+  values.className = "values";
+  values.append(sfw, nsfw);
+
+  const details = document.createElement("div");
+  details.className = "stat-container";
+  details.append(chart, values);
+
+  const section = document.createElement("div");
+  section.append(input, label, details);
   return section;
 }
 

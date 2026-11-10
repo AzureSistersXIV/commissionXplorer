@@ -1,7 +1,7 @@
 /**
  * @file Application bootstrap and event-listener helpers.
  *
- * Depends on: utilities.js (setIsNsfw, checkNew, loadContent) and
+ * Depends on: utilities.js (setIsNsfw, loadContent) and
  * generation.js (generateHeader, generateMain).
  */
 
@@ -25,7 +25,6 @@ document.addEventListener("DOMContentLoaded", () => {
   generateHeader(document.body);
   generateMain(document.body);
 
-  checkNew();
   addNavigateSuccess(loadContent); // re-render on every navigation, back/forward included
   loadContent(); // initial render
 });

@@ -219,6 +219,8 @@ function generateCard(artistName, thumb) {
 
   const img = document.createElement("img");
   img.alt = `picture by ${artistName}`;
+  img.loading = "lazy";
+  img.decoding = "async";
   // Set the handler before the source so a cached image cannot be missed
   img.onload = () => {
     if (img.naturalHeight >= SMALL_IMAGE_HEIGHT) return;
@@ -279,6 +281,8 @@ function generatePreview(link) {
 
   const img = document.createElement("img");
   img.alt = `Preview for ${link}`;
+  img.loading = "lazy";
+  img.decoding = "async";
 
   /** @type {HTMLVideoElement|HTMLAudioElement|null} Native player, for media files. */
   let player = null;

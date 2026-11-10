@@ -427,8 +427,8 @@ async function loadArtworks(signal) {
 }
 
 /**
- * Generates the thumbnails of an artist's artworks through thumbnail.php, then
- * displays the previews.
+ * Generates the thumbnails of an artist's artworks through thumbnail.php and
+ * displays previews progressively in the original artwork order.
  *
  * Requests run in a small pool ({@link THUMBNAIL_CONCURRENCY}) and progress is
  * counted on the client. One failing artwork is logged and skipped; it does not
@@ -445,6 +445,8 @@ async function setThumbnails(artist, artworks, signal) {
 
   let next = 0; // index of the next artwork to process
   let done = 0;
+  let nextToRender = 0;
+  const completed = new Array(total);
   const failed = [];
 
   setProgressText("0%");
@@ -454,7 +456,8 @@ async function setThumbnails(artist, artworks, signal) {
   // the check and the increment, so two workers never take the same artwork.
   async function worker() {
     while (next < total && !signal.aborted) {
-      const artwork = artworks[next++];
+      const index = next++;
+      const artwork = artworks[index];
 
       try {
         const response = await fetch(apiUrl("thumbnail.php"), {
@@ -470,8 +473,15 @@ async function setThumbnails(artist, artworks, signal) {
         console.error(`Thumbnail failed for ${artwork}:`, err.message);
       }
 
+      if (signal.aborted) return;
+      completed[index] = artwork;
+      while (nextToRender < total && completed[nextToRender] !== undefined) {
+        generatePreview(`../${completed[nextToRender]}`);
+        nextToRender++;
+      }
+
       done++;
-      if (!signal.aborted) setProgressText(`${Math.round((done / total) * 100)}%`);
+      setProgressText(`${Math.round((done / total) * 100)}%`);
     }
   }
 
@@ -479,32 +489,10 @@ async function setThumbnails(artist, artworks, signal) {
   await Promise.all(Array.from({ length: workerCount }, worker));
   if (signal.aborted) return;
 
-  artworks.forEach((artwork) => generatePreview(`../${artwork}`));
-
   if (failed.length > 0) {
     console.warn(`${artist}: ${failed.length}/${total} thumbnails failed`, failed);
   }
   console.debug(`${artist}: ${done}/${total} - End`);
-}
-
-/**
- * Asks the server whether new artists were added. The result is only logged to
- * the console, the UI is not updated. Failures are logged and otherwise ignored.
- * @returns {Promise<void>}
- */
-async function checkNew() {
-  beginLoading();
-  try {
-    const res = await fetch(apiUrl("new.php"));
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
-    const artists = await res.json();
-    if (artists.length > 0) console.debug("New artists:", artists);
-  } catch (err) {
-    console.warn("Failed to check new artists:", err.message);
-  } finally {
-    endLoading();
-  }
 }
 
 // *** UI visibility ***
