@@ -335,6 +335,60 @@ function loadContent() {
 }
 
 /**
+ * True while a {@link checkNewArtists} request is in flight, so that rapid
+ * triggers (page load followed by a tab-focus event, for instance) do not send
+ * overlapping requests.
+ * @type {boolean}
+ */
+let checkingNewArtists = false;
+
+/**
+ * Asks the server (api/new.php) whether new artists have appeared since the
+ * list was last built, and refreshes the artist list if so.
+ *
+ * Only meaningful on the welcome page (the artist list): on an artist's page
+ * it returns immediately without calling the API.
+ *
+ * Expected response of new.php: a JSON object `{ "hasNew": boolean }`.
+ * Adjust the destructuring below if the endpoint answers differently.
+ *
+ * Failures (network error, non-2xx status, invalid JSON) are logged and
+ * otherwise ignored: this check is a convenience and must never break the page.
+ *
+ * Called from: the DOMContentLoaded bootstrap and the "visibilitychange"
+ * listener (see events.js).
+ *
+ * @returns {Promise<boolean>} `true` if new artists were found and the list was
+ *   reloaded, `false` otherwise (nothing new, skipped, or request failed).
+ * @example
+ * // Refresh the list when the user comes back to the tab
+ * document.addEventListener("visibilitychange", () => {
+ *   if (!document.hidden) checkNewArtists();
+ * });
+ */
+async function checkNewArtists() {
+  // Nothing to refresh outside the artist list, and skip if a check is running
+  if (!isWelcomePage() || checkingNewArtists) return false;
+
+  checkingNewArtists = true;
+  try {
+    const res = await fetch(apiUrl("new.php"));
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    const { hasNew } = await res.json();
+    if (!hasNew) return false;
+
+    loadContent(); // re-renders the artist list (aborts any load still running)
+    return true;
+  } catch (err) {
+    console.error("Failed to check for new artists:", err.message);
+    return false;
+  } finally {
+    checkingNewArtists = false; // always release the guard, even on error
+  }
+}
+
+/**
  * Loads the artist list and renders one card per artist, a chunk at a time so
  * the progress counter and the cards appear gradually.
  *

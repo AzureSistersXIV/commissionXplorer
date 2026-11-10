@@ -1,7 +1,7 @@
 /**
  * @file Application bootstrap and event-listener helpers.
  *
- * Depends on: utilities.js (setIsNsfw, loadContent) and
+ * Depends on: utilities.js (setIsNsfw, loadContent, checkNewArtists) and
  * generation.js (generateHeader, generateMain).
  */
 
@@ -27,7 +27,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
   addNavigateSuccess(loadContent); // re-render on every navigation, back/forward included
   loadContent(); // initial render
+
+  // Look for new artists on load, then again whenever the user returns to the tab.
+  // If new.php reports something, checkNewArtists() reloads the list by itself.
+  checkNewArtists();
+  document.addEventListener("visibilitychange", onVisibilityChange);
 });
+
+/**
+ * Re-checks for new artists when the tab becomes visible again.
+ * A named function (not an inline arrow) so registering it stays idempotent.
+ * @see checkNewArtists (utilities.js)
+ */
+function onVisibilityChange() {
+  if (!document.hidden) checkNewArtists();
+}
 
 // *** Navigation events ***
 
